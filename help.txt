@@ -1,0 +1,15 @@
+EZbot 0.9 command list:
+
+
+music:
+    !joinVoice <channelId> - join bot to voice channel with specific id (if you want to find id - than go to settings and enable developer mode, than you can right click on the channel to copy its id)
+    !summon - join bot to voice channel you are currently in
+    //!play <audionName> - play audio to the voice channel
+    //!playlist - show list of added audiofiles
+    !tts "text to speech"
+    !stop - stopping current audio
+    !setvol <volume> - set music volume (from 0 to 1, 0.3 - default)
+
+other:
+    !status - get bot's status
+    !help - command to get this list
