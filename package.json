@@ -10,6 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "discord.js": "^11.0.0",
+    "node-opus": "^0.2.6",
     "yandex-speech": "0.0.13"
   }
 }

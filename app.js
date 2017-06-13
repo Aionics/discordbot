@@ -15,12 +15,14 @@ const audioList = ['invade1', 'invade2', 'invade3'];
 let State = {
     isInVoice: false,
     isPlayingOrSpeaking: false,
-    volume: 0.3
+    volume: 0.3,
+    isAutoTTSEnabled: false
 }
 let Globals = {
     voiceConnection: null,
     musicDispatcher: null
 }
+let ttsQueue = []
 
 const CommandList = {
     joinVoice: function (channelId) {
@@ -73,9 +75,15 @@ const CommandList = {
         }
     },
     tts: function (text) {
-        tts(text, () => {
+        tts(`${this.author.username} написал: ${text}`, () => {
             CommandList.play('tts-temp')
         })
+    },
+    autottsoff: function () {
+        State.isAutoTTSEnabled = false
+    },
+    autottson: function () {
+        State.isAutoTTSEnabled = true
     },
     stop: function () {
         if (State.isPlaying) {
@@ -102,7 +110,6 @@ function executeCommand(commandName, args, message) {
     let command = CommandList[commandName]
     let params
     if (args) {
-        // console.log(args, typeof args);
         params = args.match(/(?:[^\s"]+|"[^"]*")+/g);
     } else {
         params = {
@@ -134,11 +141,16 @@ bot.on('message', message => {
     if (message.content.indexOf('!') == 0) {
         let content = message.content.split(' ')
         let command = content[0].substr(1)
+        console.log(content)
+
+        content.shift()
+
+        console.log(content)
         let args
-        if (content.length == 1) {
+        if (content.length == 0) {
             args = null
         } else {
-            args = content[1]
+            args = content.join(' ')
         }
 
         isCommandExists = false;
@@ -155,6 +167,9 @@ bot.on('message', message => {
         if (!isCommandExists) {
             message.reply('Sorry, \"' + command + '\" is unknown command for me, use !help to see availible commands c:')
         }
+    } else if(State.isAutoTTSEnabled == 1 && State.isInVoice && message.author.id != config.id) {
+        let _func = CommandList.tts
+        _func.call(message, message.content)
     }
 });
 bot.login(config.token)
